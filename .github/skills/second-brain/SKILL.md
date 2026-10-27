@@ -60,6 +60,12 @@ ask the user ("What's today's date?") before creating a daily note or dated deci
 `Home.md` is the map of the whole vault. Keep its lists of projects up to date.
 Ignore the `Templates/` and `Skills/` folders when looking for notes.
 
+**If a folder or template is missing**, don't stop: create the folder, and write the note
+with frontmatter (`type`, `status`, `aliases`, `tags`) and the sections `Summary`, `Log`
+and `Related` (tickets also get `Acceptance criteria` and `Validation steps`). If
+`Home.md` is missing, create it with a `## Projects` list. This way an empty vault folder
+is enough to start.
+
 ## Naming and linking rules (the most important part)
 
 1. **One name, one note.** Before creating a note, search the vault for an existing one
