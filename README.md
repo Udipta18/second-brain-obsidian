@@ -1,39 +1,48 @@
-# Second Brain for VS Code Copilot
+# 🧠 Second Brain for VS Code Copilot
+
+![Copilot](https://img.shields.io/badge/GitHub%20Copilot-VS%20Code-0078D4?style=for-the-badge&logo=visualstudiocode&logoColor=white)
+![Obsidian](https://img.shields.io/badge/Obsidian-Vault-7C3AED?style=for-the-badge&logo=obsidian&logoColor=white)
+![No commands](https://img.shields.io/badge/Runs%20commands-Never-2EA043?style=for-the-badge)
+![Windows](https://img.shields.io/badge/Windows-Ready-F2541B?style=for-the-badge&logo=windows&logoColor=white)
+
+$\color{#f2541b}{\textsf{\textbf{Goldfish memory in, long-term memory out.}}}$
 
 AI chats have goldfish memory: every new Copilot chat starts from zero. This repo gives
 Copilot a long-term memory in an **Obsidian vault**. Copilot reads the vault before a
 task and writes to it after, so Jira tickets, Confluence knowledge and decisions stay
 linked across chats and projects, the way neurons link memories in a brain.
 
-- Works with **GitHub Copilot in VS Code** (Agent mode, Claude model)
-- Notes are plain Markdown files on your own laptop: no server, no database
-- The skill **never runs terminal commands** and **asks where your vault is** if it can't find it
+- 🔵 Works with **GitHub Copilot in VS Code** (Agent mode, Claude model)
+- 🟣 Notes are plain Markdown files on your own laptop: no server, no database
+- 🟢 The skill **never runs terminal commands** and **asks where your vault is** if it can't find it
 
 ---
 
-## What's in this repo
+## 📦 What's in this repo
 
 | Path | What it is | Needed? |
 |---|---|---|
-| `.github/skills/second-brain/SKILL.md` | The rulebook: vault layout, linking rules, the four modes | **Yes** |
-| `copilot-user-prompts/second-brain.instructions.md` | Always-on rules: tells Copilot *when* to use the vault | **Yes** |
-| `copilot-user-prompts/recall.prompt.md` | `/recall` command | Optional |
-| `copilot-user-prompts/log.prompt.md` | `/log` command | Optional |
-| `copilot-user-prompts/capture.prompt.md` | `/capture` command | Optional |
-| `copilot-user-prompts/connect.prompt.md` | `/connect` command | Optional |
-| `vault-template/` | Folders, note templates and `Home.md` | Optional (an empty folder works) |
-| `presentation/second-brain-talk.html` | 10-slide talk explaining the idea | For presenting |
-| `tools/link_doctor.py` | Link checker you can run by hand. The skill never runs it | Optional |
+| `.github/skills/second-brain/SKILL.md` | The rulebook: vault layout, linking rules, the four modes | ✅ **Yes** |
+| `copilot-user-prompts/second-brain.instructions.md` | Always-on rules: tells Copilot *when* to use the vault | ✅ **Yes** |
+| `copilot-user-prompts/recall.prompt.md` | `/recall` command | ⚪ Optional |
+| `copilot-user-prompts/log.prompt.md` | `/log` command | ⚪ Optional |
+| `copilot-user-prompts/capture.prompt.md` | `/capture` command | ⚪ Optional |
+| `copilot-user-prompts/connect.prompt.md` | `/connect` command | ⚪ Optional |
+| `vault-template/` | Folders, note templates and `Home.md` | ⚪ Optional (an empty folder works) |
+| `presentation/second-brain-talk.html` | 10-slide talk explaining the idea | 🟠 For presenting |
+| `tools/link_doctor.py` | Link checker you can run by hand. The skill never runs it | ⚪ Optional |
 
-The instructions file says **when** to use the second brain. `SKILL.md` says **how**.
+> [!IMPORTANT]
+> The instructions file says **when** to use the second brain. `SKILL.md` says **how**. Only these two files are required.
 
 ---
 
-## Setup on Windows (about 10 minutes)
+## 🟦 Setup on Windows (about 10 minutes)
 
-You only copy and paste text from GitHub. Nothing to download or install except Obsidian.
+> [!TIP]
+> You only copy and paste text from GitHub. Nothing to download or install except Obsidian.
 
-### Step 1: Make the vault
+### 🟦 Step 1: Make the vault
 
 1. In **File Explorer**, go to **Documents** and create a folder called `Second-Brain`.
 2. Open **Obsidian**, click **Open folder as vault**, and pick `Second-Brain`.
@@ -43,7 +52,7 @@ You only copy and paste text from GitHub. Nothing to download or install except 
    (Windows 10: hold **Shift** while right-clicking). Keep this path for Step 3.
    It may be inside OneDrive, so use the copied path rather than guessing.
 
-### Step 2: Install the skill
+### 🟪 Step 2: Install the skill
 
 1. Open [SKILL.md](.github/skills/second-brain/SKILL.md) on GitHub and click the
    **Copy raw file** icon (two overlapping squares) above the text.
@@ -61,10 +70,11 @@ You only copy and paste text from GitHub. Nothing to download or install except 
 4. Click inside the file, press **Ctrl+V**, then **Ctrl+S**.
 5. Go back to your project with **File > Open Recent**.
 
+> [!NOTE]
 > **Shortcut for one project only:** open your project, click **New File**, type
 > `.github/skills/second-brain/SKILL.md`, paste and save. Don't commit it to your team's repo.
 
-### Step 3: Install the instructions
+### 🟧 Step 3: Install the instructions
 
 1. Open [second-brain.instructions.md](copilot-user-prompts/second-brain.instructions.md)
    on GitHub and click **Copy raw file**.
@@ -76,7 +86,7 @@ You only copy and paste text from GitHub. Nothing to download or install except 
    (remove the quotation marks).
 6. Press **Ctrl+S**.
 
-### Step 4: Add the four commands (optional, recommended)
+### 🟩 Step 4: Add the four commands (optional, recommended)
 
 Repeat for each row:
 
@@ -94,7 +104,7 @@ Repeat for each row:
 
 Type `/` in the Copilot chat box: all four should appear.
 
-### Step 5: Connect the vault to your project
+### 🟨 Step 5: Connect the vault to your project
 
 1. Open your project in VS Code.
 2. Click **File > Add Folder to Workspace** and pick `Second-Brain`.
@@ -103,7 +113,7 @@ Type `/` in the Copilot chat box: all four should appear.
 If VS Code asks to save the workspace, you can ignore it. If it ever forgets the vault,
 repeat this step.
 
-### Step 6: Test it
+### ✅ Step 6: Test it
 
 1. Open Copilot chat (**Ctrl+Alt+I**), set the mode to **Agent** and pick a **Claude** model.
 2. Type:
@@ -116,11 +126,12 @@ repeat this step.
 4. Type `/recall PAY-1`, then `/log`.
 5. In Obsidian, click the **graph view** icon in the left sidebar to see the linked notes.
 
-Use a made-up ticket for the first test, not real customer data.
+> [!WARNING]
+> Use a made-up ticket for the first test, not real customer data.
 
 ---
 
-## Setup on Mac
+## 🍎 Setup on Mac
 
 Same steps, with these differences:
 
@@ -133,7 +144,7 @@ Same steps, with these differences:
 
 ---
 
-## How to use it
+## 🟢 How to use it
 
 | Command | When | Example | What you get |
 |---|---|---|---|
@@ -153,7 +164,7 @@ since it's better at spotting related notes.
 
 ---
 
-## Vault layout
+## 🟣 Vault layout
 
 | Folder | One note per | Example |
 |---|---|---|
@@ -173,7 +184,7 @@ The skill creates missing folders itself, so an empty vault folder is enough to 
 
 ---
 
-## Troubleshooting
+## 🔴 Troubleshooting
 
 | Problem | Fix |
 |---|---|
@@ -185,17 +196,19 @@ The skill creates missing folders itself, so an empty vault folder is enough to 
 
 ---
 
-## Safety rules built into the skill
+## 🛡️ Safety rules built into the skill
 
-- Asks where the vault is before reading or writing; never guesses or creates one.
+```diff
++ Asks where the vault is before reading or writing; never guesses or creates one.
++ Every edit shows in chat with Keep or Undo.
 - Never runs terminal commands or scripts. File tools only.
 - Never deletes files. Asks before merging duplicate notes.
 - Never writes passwords, tokens, keys or customer data.
-- Every edit shows in chat with **Keep** or **Undo**.
+```
 
 ---
 
-## The presentation
+## 🟠 The presentation
 
 `presentation/second-brain-talk.html` is a 10-slide talk: human brain vs LLM brain,
 why information is scattered, how the brain wires memories, how Obsidian copies that,
