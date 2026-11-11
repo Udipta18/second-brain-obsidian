@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint 24 Review · Checkout Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ===========================================
+   THEME: "BOARDROOM" — professional, client-facing
+   White canvas, deep navy, one blue accent, serif headlines, hairline rules.
+   =========================================== */
+:root {
+    --navy: #0B1F3A;
+    --navy-2: #13294B;
+    --ink: #14181F;
+    --muted: #5B6573;
+    --rule: #DCE1E8;
+    --soft: #F4F6F9;
+    --accent: #2F5BEA;
+    --done: #1E7F5C;
+    --done-bg: #E6F3EE;
+    --partial: #A86B12;
+    --partial-bg: #FBF1E1;
+    --font-display: 'Newsreader', Georgia, serif;
+    --font-body: 'IBM Plex Sans', 'Helvetica Neue', sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --pad: 120px;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --stage-bg: #0E1420;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES (viewport-base.css)
+   =========================================== */
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--stage-bg, #000); }
+.deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--stage-bg, #000); }
+.deck-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; background: var(--slide-bg, #fff); }
+.slide { position: absolute; inset: 0; width: 1920px; height: 1080px; overflow: hidden; display: block; visibility: hidden; opacity: 0; pointer-events: none; background: var(--slide-bg, #fff); }
+.slide.active, .slide.visible { visibility: visible; opacity: 1; pointer-events: auto; z-index: 1; }
+img, video, canvas, svg { max-width: 100%; max-height: 100%; }
+.deck-controls { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 1000; }
+@media print {
+    html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+    .deck-viewport { position: static; overflow: visible; background: #fff; }
+    .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+    .slide { position: relative; display: block !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; width: 1920px; height: 1080px; break-after: page; page-break-after: always; }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+    .deck-controls { display: none !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+}
+
+/* ===========================================
+   SURFACES + SHARED CHROME
+   =========================================== */
+body { font-family: var(--font-body); color: var(--ink); -webkit-font-smoothing: antialiased; }
+.slide { background: #fff; transition: opacity 0.45s ease, visibility 0.45s; }
+.slide.navy { background: var(--navy); color: #fff; }
+
+/* Header: section eyebrow left, deck name right, hairline below */
+.hdr { position: absolute; top: 64px; left: var(--pad); right: var(--pad); display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 22px; border-bottom: 1px solid var(--rule); font-size: 20px; color: var(--muted); }
+.hdr .eyebrow { font-family: var(--font-mono); font-size: 19px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.navy .hdr { border-color: rgba(255,255,255,0.16); color: rgba(255,255,255,0.6); }
+.navy .hdr .eyebrow { color: #9DB4FF; }
+
+/* Footer: confidentiality + page number */
+.ftr { position: absolute; bottom: 48px; left: var(--pad); right: var(--pad); display: flex; justify-content: space-between; font-size: 17px; color: #8A94A3; }
+.navy .ftr { color: rgba(255,255,255,0.45); }
+
+.h1 { font-family: var(--font-display); font-weight: 500; letter-spacing: -0.02em; line-height: 1.02; }
+.h2 { font-family: var(--font-display); font-weight: 500; font-size: 72px; letter-spacing: -0.015em; line-height: 1.05; }
+.lbl { font-family: var(--font-mono); font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+/* Status badges */
+.badge { display: inline-flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 600; padding: 8px 16px; border-radius: 6px; white-space: nowrap; }
+.badge::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.badge.done { color: var(--done); background: var(--done-bg); }
+.badge.partial { color: var(--partial); background: var(--partial-bg); }
+
+/* ===========================================
+   SUBTLE REVEAL (fade + small rise), stagger with --d
+   =========================================== */
+.rv { opacity: 0; transform: translateY(18px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); transition-delay: calc(var(--d, 0) * 90ms + 100ms); }
+.slide.visible .rv { opacity: 1; transform: none; }
+
+/* ===========================================
+   SLIDE 1 — TITLE
+   =========================================== */
+.t-left { position: absolute; left: var(--pad); top: 250px; width: 980px; }
+.t-left .h1 { font-size: 136px; }
+.t-left .sub { font-size: 36px; color: var(--muted); margin-top: 30px; line-height: 1.35; max-width: 860px; }
+.t-meta { position: absolute; left: var(--pad); width: 1000px; bottom: 140px; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--rule); }
+.t-meta div { padding: 26px 24px 0 0; }
+.t-meta b { display: block; font-size: 26px; font-weight: 600; color: var(--ink); margin-top: 8px; }
+.t-panel { position: absolute; right: 0; top: 0; bottom: 0; width: 680px; background: var(--navy); color: #fff; padding: 250px 110px 0 96px; }
+.t-panel .lbl { color: rgba(255,255,255,0.55); }
+.kpi { padding: 34px 0; border-bottom: 1px solid rgba(255,255,255,0.14); display: flex; align-items: baseline; justify-content: space-between; }
+.kpi:first-of-type { border-top: 1px solid rgba(255,255,255,0.14); margin-top: 24px; }
+.kpi .v { font-family: var(--font-display); font-size: 84px; font-weight: 500; line-height: 1; }
+.kpi .v small { font-size: 40px; color: rgba(255,255,255,0.5); }
+.kpi .k { font-size: 22px; color: rgba(255,255,255,0.7); text-align: right; max-width: 260px; line-height: 1.3; }
+
+/* ===========================================
+   SLIDE 2 — OBJECTIVES TABLE
+   =========================================== */
+.obj-head { position: absolute; left: var(--pad); top: 170px; right: var(--pad); display: flex; justify-content: space-between; align-items: flex-end; }
+.obj-head p { font-size: 26px; color: var(--muted); max-width: 560px; text-align: right; line-height: 1.4; }
+.obj { position: absolute; left: var(--pad); right: var(--pad); top: 410px; }
+.obj-row { display: grid; grid-template-columns: 90px 1fr 420px 300px 170px; align-items: center; column-gap: 32px; padding: 38px 0; border-bottom: 1px solid var(--rule); }
+.obj-row.th { padding: 0 0 16px; border-bottom: 1px solid var(--ink); }
+.obj-row.th span { font-family: var(--font-mono); font-size: 17px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.obj-row .n { font-family: var(--font-display); font-size: 44px; color: var(--accent); }
+.obj-row .t { font-size: 32px; font-weight: 600; }
+.obj-row .m { font-size: 24px; color: var(--muted); }
+.obj-row .m b { color: var(--ink); font-weight: 600; }
+.bar { height: 8px; background: var(--soft); border-radius: 4px; overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; background: var(--done); border-radius: 4px; transition: width 1.2s var(--ease); transition-delay: calc(var(--d) * 90ms + 400ms); }
+.bar i.partial { background: #D9962E; }
+.slide.visible .bar i { width: var(--p); }
+.bar-wrap { display: flex; align-items: center; gap: 16px; font-size: 20px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar-wrap .bar { flex: 1; }
+
+/* ===========================================
+   SLIDES 3–6 — OBJECTIVE DETAIL (three columns)
+   =========================================== */
+.d-title { position: absolute; left: var(--pad); right: var(--pad); top: 170px; display: flex; justify-content: space-between; align-items: flex-end; }
+.d-title .num { font-family: var(--font-mono); font-size: 20px; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 14px; }
+.d-cols { position: absolute; left: var(--pad); right: var(--pad); top: 380px; bottom: 130px; display: grid; grid-template-columns: 420px 1fr 520px; column-gap: 64px; }
+.col .lbl { padding-bottom: 18px; border-bottom: 1px solid var(--ink); margin-bottom: 26px; }
+.col .why { font-family: var(--font-display); font-size: 38px; line-height: 1.3; color: var(--ink); }
+.del { list-style: none; }
+.del li { display: grid; grid-template-columns: 1fr auto; column-gap: 20px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid var(--rule); font-size: 28px; line-height: 1.35; }
+.del li:first-child { padding-top: 0; }
+.del .tkt { font-family: var(--font-mono); font-size: 18px; color: var(--muted); }
+.del li.carry { color: var(--partial); }
+.impact { background: var(--navy); color: #fff; border-radius: 10px; padding: 44px 48px; height: 100%; display: flex; flex-direction: column; }
+.impact .lbl { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.2); }
+.impact .ba { display: flex; align-items: baseline; gap: 26px; margin-top: auto; }
+.impact .before { font-family: var(--font-display); font-size: 64px; color: rgba(255,255,255,0.45); text-decoration: line-through; text-decoration-thickness: 3px; }
+.impact .arrow { font-size: 44px; color: #9DB4FF; }
+.impact .after { font-family: var(--font-display); font-size: 104px; line-height: 1; letter-spacing: -0.02em; }
+.impact .cap { font-size: 24px; color: rgba(255,255,255,0.75); margin-top: 22px; line-height: 1.4; }
+
+/* ===========================================
+   SLIDE 7 — NEXT STEPS & DISCUSSION
+   =========================================== */
+.n-left { position: absolute; left: var(--pad); top: 230px; width: 760px; }
+.n-left .h1 { font-size: 112px; }
+.n-left p { font-size: 30px; line-height: 1.45; color: rgba(255,255,255,0.72); margin-top: 36px; max-width: 700px; }
+.n-right { position: absolute; left: 1000px; right: var(--pad); top: 230px; }
+.n-item { display: grid; grid-template-columns: 240px 1fr; column-gap: 30px; padding: 34px 0; border-top: 1px solid rgba(255,255,255,0.16); }
+.n-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.16); }
+.n-item .lbl { color: #9DB4FF; padding-top: 6px; }
+.n-item .v { font-size: 30px; line-height: 1.4; }
+
+/* ===========================================
+   DECK CONTROLS + INLINE EDITING
+   =========================================== */
+.deck-controls { display: flex; align-items: center; gap: 12px; font-family: var(--font-mono); font-size: 13px; color: #fff;
+    background: rgba(11,31,58,0.85); padding: 6px 14px; border-radius: 6px; opacity: 0.25; transition: opacity 0.3s; }
+.deck-controls:hover { opacity: 1; }
+.deck-controls button { background: none; border: none; color: inherit; font: inherit; cursor: pointer; padding: 2px 6px; }
+.edit-hotzone { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 10000; cursor: pointer; }
+.edit-toggle { position: fixed; top: 18px; left: 18px; z-index: 10001; width: 42px; height: 42px; border-radius: 6px; border: none; background: var(--accent); color: #fff; font-size: 18px; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+body.editing [contenteditable="true"] { outline: 2px dashed rgba(47,91,234,0.6); outline-offset: 6px; cursor: text; }
+</style>
+</head>
+<body>
+<div class="edit-hotzone" aria-hidden="true"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)" aria-label="Toggle edit mode">✎</button>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+    <!-- SLIDE 1 — TITLE -->
+    <section class="slide active" aria-label="Title">
+        <div class="hdr" style="right:800px"><span class="eyebrow">Sprint Review</span><span>Team Atlas</span></div>
+        <div class="t-left">
+            <h1 class="h1 rv" style="--d:0">Sprint 24<br>Review</h1>
+            <p class="sub rv" style="--d:1">Faster checkout and more reliable operations for the Checkout Platform.</p>
+        </div>
+        <div class="t-meta rv" style="--d:2">
+            <div><span class="lbl">Sprint dates</span><b>28 Oct – 08 Nov 2026</b></div>
+            <div><span class="lbl">Review date</span><b>11 Nov 2026</b></div>
+            <div><span class="lbl">Delivery team</span><b>Team Atlas</b></div>
+        </div>
+        <aside class="t-panel">
+            <div class="lbl rv" style="--d:2">Sprint at a glance</div>
+            <div class="kpi rv" style="--d:3"><span class="v">3<small>/4</small></span><span class="k">Objectives fully delivered</span></div>
+            <div class="kpi rv" style="--d:4"><span class="v">90<small>%</small></span><span class="k">Story points completed</span></div>
+            <div class="kpi rv" style="--d:5"><span class="v">55<small>%</small></span><span class="k">Faster median checkout</span></div>
+        </aside>
+        <div class="ftr" style="right:800px"><span>Confidential</span><span>01 / 07</span></div>
+    </section>
+    <!-- SLIDE 2 — SPRINT OBJECTIVES -->
+    <section class="slide" aria-label="Sprint objectives">
+        <div class="hdr"><span class="eyebrow">Sprint objectives</span><span>Sprint 24 · Team Atlas</span></div>
+        <div class="obj-head">
+            <h2 class="h2 rv" style="--d:0">Four objectives,<br>three fully delivered</h2>
+            <p class="rv" style="--d:1">Remaining payment work (reconciliation reporting) moves into Sprint 25.</p>
+        </div>
+        <div class="obj">
+            <div class="obj-row th rv" style="--d:1"><span>#</span><span>Objective</span><span>Key outcome</span><span>Progress</span><span>Status</span></div>
+            <div class="obj-row rv" style="--d:2"><span class="n">01</span><span class="t">One-page checkout</span><span class="m">Checkout time <b>3:10 → 1:25</b></span>
+                <div class="bar-wrap"><div class="bar"><i class="" style="--p:100%;--d:2"></i></div><span>100%</span></div><span class="badge done">Delivered</span></div>
+            <div class="obj-row rv" style="--d:3"><span class="n">02</span><span class="t">Order-tracking notifications</span><span class="m"><b>12</b> automated status updates</span>
+                <div class="bar-wrap"><div class="bar"><i class="" style="--p:100%;--d:3"></i></div><span>100%</span></div><span class="badge done">Delivered</span></div>
+            <div class="obj-row rv" style="--d:4"><span class="n">03</span><span class="t">Admin dashboard performance</span><span class="m">Load time <b>6.2s → 1.8s</b></span>
+                <div class="bar-wrap"><div class="bar"><i class="" style="--p:100%;--d:4"></i></div><span>100%</span></div><span class="badge done">Delivered</span></div>
+            <div class="obj-row rv" style="--d:5"><span class="n">04</span><span class="t">Payment reliability</span><span class="m">Failure rate <b>1.9% → 0.4%</b></span>
+                <div class="bar-wrap"><div class="bar"><i class="partial" style="--p:75%;--d:5"></i></div><span>75%</span></div><span class="badge partial">75% complete</span></div>
+        </div>
+        <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>02 / 07</span></div>
+    </section>
+    <!-- SLIDE 3 — OBJECTIVE 01 -->
+    <section class="slide" aria-label="Objective 01">
+        <div class="hdr"><span class="eyebrow">Objective 01 of 04</span><span>Sprint 24 · Team Atlas</span></div>
+        <div class="d-title">
+            <h2 class="h2 rv" style="--d:0">One-page checkout</h2>
+            <span class="badge done rv" style="--d:1">Delivered · 13 pts</span>
+        </div>
+        <div class="d-cols">
+            <div class="col rv" style="--d:2"><div class="lbl">Why it mattered</div><p class="why">Customers were abandoning a four-step checkout before paying.</p></div>
+            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3">Combined address and payment into a single screen<span class="tkt">ATL-412</span></li><li class="rv" style="--d:4">Saved cards for returning customers<span class="tkt">ATL-418</span></li><li class="rv" style="--d:5">Apple Pay and Google Pay at checkout<span class="tkt">ATL-421</span></li></ul></div>
+            <div class="col rv" style="--d:4"><div class="impact"><div class="lbl">Impact</div><div class="ba"><span class="before">3:10</span><span class="arrow">→</span><span class="after">1:25</span></div><div class="cap">Median time to complete checkout (minutes)</div></div></div>
+        </div>
+        <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>03 / 07</span></div>
+    </section>
+    <!-- SLIDE 4 — OBJECTIVE 02 -->
+    <section class="slide" aria-label="Objective 02">
+        <div class="hdr"><span class="eyebrow">Objective 02 of 04</span><span>Sprint 24 · Team Atlas</span></div>
+        <div class="d-title">
+            <h2 class="h2 rv" style="--d:0">Order-tracking notifications</h2>
+            <span class="badge done rv" style="--d:1">Delivered · 8 pts</span>
+        </div>
+        <div class="d-cols">
+            <div class="col rv" style="--d:2"><div class="lbl">Why it mattered</div><p class="why">“Where is my order?” was the most common support request.</p></div>
+            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3">Real-time order status event pipeline<span class="tkt">ATL-430</span></li><li class="rv" style="--d:4">Push and SMS notification templates<span class="tkt">ATL-433</span></li><li class="rv" style="--d:5">Customer notification preferences<span class="tkt">ATL-437</span></li></ul></div>
+            <div class="col rv" style="--d:4"><div class="impact"><div class="lbl">Impact</div><div class="ba"><span class="after">12</span></div><div class="cap">Order status updates now sent to customers automatically</div></div></div>
+        </div>
+        <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>04 / 07</span></div>
+    </section>
+    <!-- SLIDE 5 — OBJECTIVE 03 -->
+    <section class="slide" aria-label="Objective 03">
+        <div class="hdr"><span class="eyebrow">Objective 03 of 04</span><span>Sprint 24 · Team Atlas</span></div>
+        <div class="d-title">
+            <h2 class="h2 rv" style="--d:0">Admin dashboard performance</h2>
+            <span class="badge done rv" style="--d:1">Delivered · 8 pts</span>
+        </div>
+        <div class="d-cols">
+            <div class="col rv" style="--d:2"><div class="lbl">Why it mattered</div><p class="why">Operations staff faced slow page loads during peak trading hours.</p></div>
+            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3">Caching for the most expensive order queries<span class="tkt">ATL-441</span></li><li class="rv" style="--d:4">Pagination on the orders table<span class="tkt">ATL-444</span></li><li class="rv" style="--d:5">On-demand loading of report charts<span class="tkt">ATL-446</span></li></ul></div>
+            <div class="col rv" style="--d:4"><div class="impact"><div class="lbl">Impact</div><div class="ba"><span class="before">6.2s</span><span class="arrow">→</span><span class="after">1.8s</span></div><div class="cap">Dashboard load time at peak traffic</div></div></div>
+        </div>
+        <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>05 / 07</span></div>
+    </section>
+    <!-- SLIDE 6 — OBJECTIVE 04 -->
+    <section class="slide" aria-label="Objective 04">
+        <div class="hdr"><span class="eyebrow">Objective 04 of 04</span><span>Sprint 24 · Team Atlas</span></div>
+        <div class="d-title">
+            <h2 class="h2 rv" style="--d:0">Payment reliability</h2>
+            <span class="badge partial rv" style="--d:1">75% complete · 9 of 13 pts</span>
+        </div>
+        <div class="d-cols">
+            <div class="col rv" style="--d:2"><div class="lbl">Why it mattered</div><p class="why">Failed and duplicate payments affected customer trust and refund volume.</p></div>
+            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3">Automatic retry on payment gateway timeouts<span class="tkt">ATL-450</span></li><li class="rv" style="--d:4">Duplicate-safe payment webhooks<span class="tkt">ATL-452</span></li><li class="rv carry" style="--d:5">Daily reconciliation report — moved to Sprint 25<span class="tkt">ATL-455</span></li></ul></div>
+            <div class="col rv" style="--d:4"><div class="impact"><div class="lbl">Impact</div><div class="ba"><span class="before">1.9%</span><span class="arrow">→</span><span class="after">0.4%</span></div><div class="cap">Failed payment rate</div></div></div>
+        </div>
+        <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>06 / 07</span></div>
+    </section>
+    <!-- SLIDE 7 — NEXT STEPS & DISCUSSION -->
+    <section class="slide navy" aria-label="Next steps">
+        <div class="hdr"><span class="eyebrow">Next steps</span><span>Sprint 24 · Team Atlas</span></div>
+        <div class="n-left">
+            <h2 class="h1 rv" style="--d:0">Questions &amp;<br>discussion</h2>
+            <p class="rv" style="--d:1">All delivered features are available on staging for review. Feedback will be prioritised in Sprint 25 planning.</p>
+        </div>
+        <div class="n-right">
+            <div class="n-item rv" style="--d:2"><span class="lbl">Carried over</span><span class="v">Daily payment reconciliation report</span></div>
+            <div class="n-item rv" style="--d:3"><span class="lbl">Sprint 25 focus</span><span class="v">Guest checkout and self-service refunds</span></div>
+            <div class="n-item rv" style="--d:4"><span class="lbl">Decision needed</span><span class="v">Approve SMS provider budget for notifications</span></div>
+            <div class="n-item rv" style="--d:5"><span class="lbl">Next review</span><span class="v">Wednesday, 25 November 2026</span></div>
+        </div>
+        <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>07 / 07</span></div>
+    </section>
+</main>
+</div>
+<nav class="deck-controls" aria-label="Slide navigation">
+    <button id="prevBtn" aria-label="Previous slide">←</button>
+    <span id="counter">1 / 7</span>
+    <button id="nextBtn" aria-label="Next slide">→</button>
+</nav>
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   Arrows / Space / PageUp-Down / wheel / swipe
+   =========================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.stage = document.getElementById('deckStage');
+        this.counter = document.getElementById('counter');
+        this.current = 0;
+        this.wheelLock = false;
+        this.setupStageScale();
+        this.setupNav();
+        const start = parseInt((location.hash || '').replace('#', ''), 10);
+        this.show(isNaN(start) ? 0 : start - 1);
+    }
+    setupStageScale() {
+        const scale = () => {
+            const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            const x = (window.innerWidth - 1920 * f) / 2;
+            const y = (window.innerHeight - 1080 * f) / 2;
+            this.stage.style.transform = `translate(${x}px, ${y}px) scale(${f})`;
+        };
+        scale();
+        window.addEventListener('resize', scale);
+    }
+    setupNav() {
+        document.addEventListener('keydown', (e) => {
+            if (document.body.classList.contains('editing')) return;
+            if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); this.show(this.current + 1); }
+            if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); this.show(this.current - 1); }
+            if (e.key === 'Home') this.show(0);
+            if (e.key === 'End') this.show(this.slides.length - 1);
+        });
+        window.addEventListener('wheel', (e) => {
+            if (this.wheelLock || Math.abs(e.deltaY) < 20) return;
+            this.wheelLock = true;
+            this.show(this.current + (e.deltaY > 0 ? 1 : -1));
+            setTimeout(() => (this.wheelLock = false), 700);
+        }, { passive: true });
+        let sx = 0;
+        window.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+        window.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - sx;
+            if (Math.abs(dx) > 50) this.show(this.current + (dx < 0 ? 1 : -1));
+        });
+        document.getElementById('prevBtn').addEventListener('click', () => this.show(this.current - 1));
+        document.getElementById('nextBtn').addEventListener('click', () => this.show(this.current + 1));
+    }
+    show(i) {
+        this.current = Math.max(0, Math.min(i, this.slides.length - 1));
+        this.slides.forEach((s, n) => {
+            const on = n === this.current;
+            s.classList.toggle('active', on);
+            s.classList.toggle('visible', on);
+        });
+        this.counter.textContent = `${this.current + 1} / ${this.slides.length}`;
+        try { history.replaceState(null, '', '#' + (this.current + 1)); } catch (e) {}
+    }
+}
+const deck = new SlidePresentation();
+
+/* ===========================================
+   INLINE EDITOR
+   E or top-left hover → edit text.
+   Edits are also kept in this browser (localStorage) when available.
+   =========================================== */
+const editor = {
+    isActive: false,
+    key: 'sprint-review-pro-edits-v1',
+    targets() { return document.querySelectorAll('.deck-stage h1, .deck-stage h2, .deck-stage p, .deck-stage li, .deck-stage .badge, .deck-stage .t-meta b, .deck-stage .kpi .k, .deck-stage .kpi .v, .deck-stage .obj-row .t, .deck-stage .obj-row .m, .deck-stage .before, .deck-stage .after, .deck-stage .cap, .deck-stage .n-item .v, .deck-stage .hdr span, .deck-stage .ftr span'); },
+    toggleEditMode() {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle('editing', this.isActive);
+        document.getElementById('editToggle').classList.toggle('active', this.isActive);
+        this.targets().forEach((el) => el.setAttribute('contenteditable', this.isActive ? 'true' : 'false'));
+        if (!this.isActive) this.save();
+    },
+    save() {
+        try {
+            const data = Array.from(this.targets()).map((el) => el.innerHTML);
+            localStorage.setItem(this.key, JSON.stringify(data));
+        } catch (e) {}
+    },
+    load() {
+        try {
+            const raw = localStorage.getItem(this.key);
+            if (!raw) return;
+            const data = JSON.parse(raw);
+            const els = this.targets();
+            if (data.length !== els.length) return;
+            els.forEach((el, i) => (el.innerHTML = data[i]));
+        } catch (e) {}
+    },
+};
+editor.load();
+
+const hotzone = document.querySelector('.edit-hotzone');
+const editToggle = document.getElementById('editToggle');
+let hideTimeout = null;
+editToggle.addEventListener('click', () => editor.toggleEditMode());
+hotzone.addEventListener('click', () => editor.toggleEditMode());
+hotzone.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); editToggle.classList.add('show'); });
+hotzone.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400); });
+editToggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+editToggle.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!editor.isActive) editToggle.classList.remove('show'); }, 400); });
+document.addEventListener('keydown', (e) => {
+    if ((e.key === 'e' || e.key === 'E') && !e.target.isContentEditable) editor.toggleEditMode();
+});
+document.addEventListener('input', () => editor.save());
+</script>
+</body>
+</html>
