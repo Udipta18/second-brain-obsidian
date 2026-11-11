@@ -130,14 +130,16 @@ body { font-family: var(--font-body); color: var(--ink); -webkit-font-smoothing:
    =========================================== */
 .d-title { position: absolute; left: var(--pad); right: var(--pad); top: 170px; display: flex; justify-content: space-between; align-items: flex-end; }
 .d-title .num { font-family: var(--font-mono); font-size: 20px; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 14px; }
-.d-cols { position: absolute; left: var(--pad); right: var(--pad); top: 380px; bottom: 130px; display: grid; grid-template-columns: 420px 1fr 520px; column-gap: 64px; }
+.d-cols { position: absolute; left: var(--pad); right: var(--pad); top: 380px; bottom: 130px; display: grid; grid-template-columns: 1fr 560px; column-gap: 80px; }
 .col .lbl { padding-bottom: 18px; border-bottom: 1px solid var(--ink); margin-bottom: 26px; }
 .col .why { font-family: var(--font-display); font-size: 38px; line-height: 1.3; color: var(--ink); }
 .del { list-style: none; }
-.del li { display: grid; grid-template-columns: 1fr auto; column-gap: 20px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid var(--rule); font-size: 28px; line-height: 1.35; }
+.del li { display: grid; grid-template-columns: 1fr auto; column-gap: 24px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid var(--rule); }
+.del .it { font-size: 30px; font-weight: 600; line-height: 1.3; }
+.del .ex { grid-column: 1; font-size: 23px; color: var(--muted); line-height: 1.45; margin-top: 8px; }
 .del li:first-child { padding-top: 0; }
 .del .tkt { font-family: var(--font-mono); font-size: 18px; color: var(--muted); }
-.del li.carry { color: var(--partial); }
+.del li.carry .it { color: var(--partial); }
 .impact { background: var(--navy); color: #fff; border-radius: 10px; padding: 44px 48px; height: 100%; display: flex; flex-direction: column; }
 .impact .lbl { color: rgba(255,255,255,0.6); border-color: rgba(255,255,255,0.2); }
 .impact .ba { display: flex; align-items: baseline; gap: 26px; margin-top: auto; }
@@ -225,8 +227,7 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(47,91,234,0.6);
             <span class="badge done rv" style="--d:1">Delivered · 13 pts</span>
         </div>
         <div class="d-cols">
-            <div class="col rv" style="--d:2"><div class="lbl">Why it mattered</div><p class="why">Customers were abandoning a four-step checkout before paying.</p></div>
-            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3">Combined address and payment into a single screen<span class="tkt">ATL-412</span></li><li class="rv" style="--d:4">Saved cards for returning customers<span class="tkt">ATL-418</span></li><li class="rv" style="--d:5">Apple Pay and Google Pay at checkout<span class="tkt">ATL-421</span></li></ul></div>
+            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3"><span class="it">Combined address and payment into a single screen</span><span class="tkt">ATL-412</span><span class="ex">Customers now enter delivery and payment details on one page instead of moving through four separate steps.</span></li><li class="rv" style="--d:4"><span class="it">Saved cards for returning customers</span><span class="tkt">ATL-418</span><span class="ex">Repeat buyers can pay with a securely stored card, so they don’t re-type card details each time.</span></li><li class="rv" style="--d:5"><span class="it">Apple Pay and Google Pay at checkout</span><span class="tkt">ATL-421</span><span class="ex">One-tap wallet payments on mobile, which removes most of the typing on small screens.</span></li></ul></div>
             <div class="col rv" style="--d:4"><div class="impact"><div class="lbl">Impact</div><div class="ba"><span class="before">3:10</span><span class="arrow">→</span><span class="after">1:25</span></div><div class="cap">Median time to complete checkout (minutes)</div></div></div>
         </div>
         <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>03 / 07</span></div>
@@ -239,8 +240,7 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(47,91,234,0.6);
             <span class="badge done rv" style="--d:1">Delivered · 8 pts</span>
         </div>
         <div class="d-cols">
-            <div class="col rv" style="--d:2"><div class="lbl">Why it mattered</div><p class="why">“Where is my order?” was the most common support request.</p></div>
-            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3">Real-time order status event pipeline<span class="tkt">ATL-430</span></li><li class="rv" style="--d:4">Push and SMS notification templates<span class="tkt">ATL-433</span></li><li class="rv" style="--d:5">Customer notification preferences<span class="tkt">ATL-437</span></li></ul></div>
+            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3"><span class="it">Real-time order status event pipeline</span><span class="tkt">ATL-430</span><span class="ex">Every change to an order (packed, shipped, delivered) is now captured the moment it happens.</span></li><li class="rv" style="--d:4"><span class="it">Push and SMS notification templates</span><span class="tkt">ATL-433</span><span class="ex">Clear, branded messages tell customers where their order is without them having to ask.</span></li><li class="rv" style="--d:5"><span class="it">Customer notification preferences</span><span class="tkt">ATL-437</span><span class="ex">Customers choose which updates they receive and on which channel.</span></li></ul></div>
             <div class="col rv" style="--d:4"><div class="impact"><div class="lbl">Impact</div><div class="ba"><span class="after">12</span></div><div class="cap">Order status updates now sent to customers automatically</div></div></div>
         </div>
         <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>04 / 07</span></div>
@@ -253,8 +253,7 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(47,91,234,0.6);
             <span class="badge done rv" style="--d:1">Delivered · 8 pts</span>
         </div>
         <div class="d-cols">
-            <div class="col rv" style="--d:2"><div class="lbl">Why it mattered</div><p class="why">Operations staff faced slow page loads during peak trading hours.</p></div>
-            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3">Caching for the most expensive order queries<span class="tkt">ATL-441</span></li><li class="rv" style="--d:4">Pagination on the orders table<span class="tkt">ATL-444</span></li><li class="rv" style="--d:5">On-demand loading of report charts<span class="tkt">ATL-446</span></li></ul></div>
+            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3"><span class="it">Caching for the most expensive order queries</span><span class="tkt">ATL-441</span><span class="ex">Frequently used order data is stored ready-to-serve, so pages no longer wait on the database.</span></li><li class="rv" style="--d:4"><span class="it">Pagination on the orders table</span><span class="tkt">ATL-444</span><span class="ex">Orders load in pages rather than all at once, keeping the table fast at any volume.</span></li><li class="rv" style="--d:5"><span class="it">On-demand loading of report charts</span><span class="tkt">ATL-446</span><span class="ex">Charts load only when a user opens them, so the main dashboard appears almost instantly.</span></li></ul></div>
             <div class="col rv" style="--d:4"><div class="impact"><div class="lbl">Impact</div><div class="ba"><span class="before">6.2s</span><span class="arrow">→</span><span class="after">1.8s</span></div><div class="cap">Dashboard load time at peak traffic</div></div></div>
         </div>
         <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>05 / 07</span></div>
@@ -267,8 +266,7 @@ body.editing [contenteditable="true"] { outline: 2px dashed rgba(47,91,234,0.6);
             <span class="badge partial rv" style="--d:1">75% complete · 9 of 13 pts</span>
         </div>
         <div class="d-cols">
-            <div class="col rv" style="--d:2"><div class="lbl">Why it mattered</div><p class="why">Failed and duplicate payments affected customer trust and refund volume.</p></div>
-            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3">Automatic retry on payment gateway timeouts<span class="tkt">ATL-450</span></li><li class="rv" style="--d:4">Duplicate-safe payment webhooks<span class="tkt">ATL-452</span></li><li class="rv carry" style="--d:5">Daily reconciliation report — moved to Sprint 25<span class="tkt">ATL-455</span></li></ul></div>
+            <div class="col rv" style="--d:2"><div class="lbl">What we delivered</div><ul class="del"><li class="rv" style="--d:3"><span class="it">Automatic retry on payment gateway timeouts</span><span class="tkt">ATL-450</span><span class="ex">If the payment provider is briefly slow, the payment is retried safely instead of failing.</span></li><li class="rv" style="--d:4"><span class="it">Duplicate-safe payment webhooks</span><span class="tkt">ATL-452</span><span class="ex">Repeated confirmations from the provider can no longer charge a customer twice.</span></li><li class="rv carry" style="--d:5"><span class="it">Daily reconciliation report — moved to Sprint 25</span><span class="tkt">ATL-455</span><span class="ex">Automated daily check that our records match the payment provider’s; design done, build next sprint.</span></li></ul></div>
             <div class="col rv" style="--d:4"><div class="impact"><div class="lbl">Impact</div><div class="ba"><span class="before">1.9%</span><span class="arrow">→</span><span class="after">0.4%</span></div><div class="cap">Failed payment rate</div></div></div>
         </div>
         <div class="ftr"><span>Checkout Platform · Sprint 24 Review · Confidential</span><span>06 / 07</span></div>
