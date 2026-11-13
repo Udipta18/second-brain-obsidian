@@ -5,18 +5,18 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{height:100%;background:#fff;overflow:hidden}
-#stage{width:1920px;height:1080px;position:absolute;left:0;top:0;transform-origin:0 0;background:#f7f7f5;padding:110px 128px 150px;display:flex;flex-direction:column;gap:24px;font-family:Calibri,Carlito,Arial,sans-serif}
+#stage{width:1920px;height:1080px;position:absolute;left:0;top:0;transform-origin:0 0;background:#f7f7f5;padding:110px 128px 150px;display:flex;flex-direction:column;gap:36px;font-family:Calibri,Carlito,Arial,sans-serif}
 h2{font-size:64px;font-weight:700;color:#595959;line-height:1.1}
 .row{display:flex;align-items:stretch;gap:12px}
-.lab{width:220px;flex-shrink:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:26px;font-weight:700;color:#fff;margin-right:12px}
+.lab{width:220px;min-height:190px;flex-shrink:0;display:flex;align-items:center;justify-content:center;text-align:center;font-size:26px;font-weight:700;color:#fff;margin-right:12px}
 .lab.off{background:#7f858c} .lab.on{background:#d4440f}
-.box{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px 18px;font-size:26px;line-height:1.25}
+.box{flex:1 1 0;min-width:0;min-height:190px;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px 20px;font-size:28px;line-height:1.25}
 .box.off{background:#e4e6e8;border:2px solid #cfd3d6;color:#4a4f55}
 .box.on{background:#fde8da;border:2px solid #e8683a;color:#4a4f55}
 .box.small{padding:14px 10px;font-weight:700;color:#b93a0e}
 .arr{align-self:center;flex-shrink:0}
 .tiles{display:flex;gap:28px}
-.tile{flex:1;background:#fbdcc6;padding:26px 22px;text-align:center;font-size:32px;font-weight:700;color:#b93a0e}
+.tile{flex:1;display:flex;align-items:center;justify-content:center;min-height:120px;background:#fbdcc6;padding:26px 22px;text-align:center;font-size:32px;font-weight:700;color:#b93a0e}
 .note{font-size:24px;line-height:1.35;color:#595959}
 .foot{position:absolute;left:128px;bottom:64px;font-size:24px;color:#7a7a7a}
 </style></head><body>
@@ -25,13 +25,14 @@ h2{font-size:64px;font-weight:700;color:#595959;line-height:1.1}
 <div class="row"><div class="lab off">WITHOUT AI</div>
 <div class="box off">Developer re-explains the ticket and repo in every new chat</div><svg class="arr" width="56" height="36" viewBox="0 0 56 36"><path d="M0 11h32V0l24 18-24 18V25H0z" fill="#bfc4c9"/></svg>
 <div class="box off">Past fixes and decisions are lost when the chat closes</div><svg class="arr" width="56" height="36" viewBox="0 0 56 36"><path d="M0 11h32V0l24 18-24 18V25H0z" fill="#bfc4c9"/></svg>
-<div class="box off">Knowledge scattered across Jira, Confluence, Teams and heads</div></div>
+<div class="box off">Knowledge scattered across Jira, Confluence, Teams and heads</div><svg class="arr" width="56" height="36" viewBox="0 0 56 36"><path d="M0 11h32V0l24 18-24 18V25H0z" fill="#bfc4c9"/></svg>
+<div class="box off">Same work is repeated on the next ticket</div></div>
 <div class="row"><div class="lab on">WITH AI</div>
 <div class="box on">Jira ticket or Confluence page pasted with /capture</div><svg class="arr" width="56" height="36" viewBox="0 0 56 36"><path d="M0 11h32V0l24 18-24 18V25H0z" fill="#f0a98a"/></svg>
 <div class="box on">Skill writes linked notes into the Obsidian vault</div><svg class="arr" width="56" height="36" viewBox="0 0 56 36"><path d="M0 11h32V0l24 18-24 18V25H0z" fill="#f0a98a"/></svg>
 <div class="box on">/recall reads the notes and briefs the chat before work starts</div><svg class="arr" width="56" height="36" viewBox="0 0 56 36"><path d="M0 11h32V0l24 18-24 18V25H0z" fill="#f0a98a"/></svg>
 <div class="box on">/log saves work and decisions, /connect links related notes weekly</div></div>
-<div class="tiles"><div class="tile">Memory that survives every chat</div><div class="tile">Notes linked like neurons</div><div class="tile">Never runs commands</div></div>
+<div class="tiles"><div class="tile">Memory that survives every chat</div><div class="tile">Notes linked like neurons</div><div class="tile">Safe: no terminal commands</div></div>
 <p class="note">Without AI: every Copilot chat starts from zero, so context is re-explained and decisions are lost. With AI: tickets and knowledge become linked notes in an Obsidian vault, Copilot recalls them before a task and logs the work after it, and the graph view shows how everything connects.</p>
 <p class="foot">Second Brain | Copilot + Obsidian</p>
 </div>
