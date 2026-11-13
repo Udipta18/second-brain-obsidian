@@ -30,6 +30,7 @@ linked across chats and projects, the way neurons link memories in a brain.
 | `copilot-user-prompts/connect.prompt.md` | `/connect` command | ⚪ Optional |
 | `vault-template/` | Folders, note templates and `Home.md` | ⚪ Optional (an empty folder works) |
 | `presentation/second-brain-talk.html` | 10-slide talk explaining the idea | 🟠 For presenting |
+| `presentation/second-brain-usecase-slide.html` | One-slide summary: without vs with a second brain | 🟠 For presenting |
 | `tools/link_doctor.py` | Link checker you can run by hand. The skill never runs it | ⚪ Optional |
 
 > [!IMPORTANT]
